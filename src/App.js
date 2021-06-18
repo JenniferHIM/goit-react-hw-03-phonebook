@@ -15,7 +15,7 @@ export default class App extends Component {
     filter: "",
   };
 
-  componentDidMount() {
+    componentDidMount() {
     const checkStorage = localStorage.getItem('contacts');
     if (checkStorage) {
       this.setState({ contacts: JSON.parse(checkStorage) });
@@ -56,18 +56,17 @@ export default class App extends Component {
 
   getVisibleContacts = () => {
     const { contacts, filter } = this.state;
-
-    return contacts.filter((contacts) =>
-      contacts.name.toLowerCase().includes(filter.toLowerCase())
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
-
-  removeContact = (contactId) => {
-    this.setState((prevState) => {
-      return {
-        contacts: prevState.contacts.filter(({ id }) => id !== contactId),
-      };
-    });
+ 
+    removeContact = (contactId) => {
+    this.setState((prevState) => ({
+      contacts: prevState.contacts.filter(
+        (contact) => contact.id !== contactId),
+    }));
   };
 
   render() {
@@ -81,15 +80,12 @@ export default class App extends Component {
 
         <ContactForm onAddContact={this.addContact} />
         <h2>Contacts</h2>
-        {visibleContacts.length > 1 && (
-          <Filter value={filter} onChangeFilter={this.changeFilter} />
-        )}
-        {visibleContacts.length > 0 && (
-          <ContactList
-            contacts={visibleContacts}
-            onRemoveContact={this.removeContact}
-          />
-        )}
+        <Filter value={filter} onChangeFilter={this.changeFilter} />
+        <ContactList
+          contacts={visibleContacts}
+          onRemoveContact={this.removeContact}
+        />
+        
       </div>
     );
   }
